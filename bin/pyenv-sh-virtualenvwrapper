@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Summary: Setup virtualenvwrapper into current shell.
+#
+# Usage: pyenv virtualenvwrapper
+
+set -e
+[ -n "$PYENV_DEBUG" ] && set -x
+
+VIRTUALENVWRAPPER="$(pyenv-which virtualenvwrapper.sh)"
+
+if [ -f "${VIRTUALENVWRAPPER}" ]; then
+  echo "source \"${VIRTUALENVWRAPPER}\""
+else
+  echo "virtualenvwrapper not installed." 1>&2
+  exit
+fi
