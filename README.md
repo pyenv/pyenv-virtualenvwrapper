@@ -61,7 +61,7 @@ or, if you favor `virtualenvwrapper_lazy.sh`,
 
 ## Version History
 
-#### 2013XXYY
+#### 20130306
 
  * Initial public release.
 
