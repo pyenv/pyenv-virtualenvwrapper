@@ -6,11 +6,11 @@
 set -e
 [ -n "$PYENV_DEBUG" ] && set -x
 
-VIRTUALENVWRAPPER_SCRIPT="$(pyenv-which virtualenvwrapper.sh)"
+VIRTUALENVWRAPPER_SCRIPT="$(pyenv-which virtualenvwrapper.sh 2>/dev/null || true)"
 
 if [ -f "${VIRTUALENVWRAPPER_SCRIPT}" ]; then
   echo "source \"${VIRTUALENVWRAPPER_SCRIPT}\""
 else
   echo "virtualenvwrapper not installed." 1>&2
-  exit
+  echo "false"
 fi
