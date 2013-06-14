@@ -61,6 +61,10 @@ or, if you favor `virtualenvwrapper_lazy.sh`,
 
 ## Version History
 
+#### 20130614
+
+ * Improve error logging.
+
 #### 20130306
 
  * Initial public release.
