@@ -6,8 +6,8 @@
 set -e
 [ -n "$PYENV_DEBUG" ] && set -x
 
-VIRTUALENVWRAPPER_SCRIPT="$(pyenv-which virtualenvwrapper.sh 2>/dev/null || true)"
-VIRTUALENVWRAPPER_LAZY_SCRIPT="$(pyenv-which virtualenvwrapper_lazy.sh 2>/dev/null || true)"
+VIRTUALENVWRAPPER_SCRIPT="$(pyenv which virtualenvwrapper.sh 2>/dev/null || true)"
+VIRTUALENVWRAPPER_LAZY_SCRIPT="$(pyenv which virtualenvwrapper_lazy.sh 2>/dev/null || true)"
 
 if [ -f "${VIRTUALENVWRAPPER_LAZY_SCRIPT}" ]; then
   echo "export VIRTUALENVWRAPPER_SCRIPT=\"${VIRTUALENVWRAPPER_SCRIPT}\";"
