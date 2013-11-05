@@ -7,8 +7,10 @@ set -e
 [ -n "$PYENV_DEBUG" ] && set -x
 
 VIRTUALENVWRAPPER_SCRIPT="$(pyenv-which virtualenvwrapper.sh 2>/dev/null || true)"
+VIRTUALENVWRAPPER_PYTHON="$(pyenv-which python 2>/dev/null || true)"
 
 if [ -f "${VIRTUALENVWRAPPER_SCRIPT}" ]; then
+  echo "export VIRTUALENVWRAPPER_PYTHON=\"${VIRTUALENVWRAPPER_PYTHON}\";"
   echo "source \"${VIRTUALENVWRAPPER_SCRIPT}\""
 else
   echo "virtualenvwrapper not installed." 1>&2
