@@ -10,7 +10,12 @@ VIRTUALENVWRAPPER_SCRIPT="$(pyenv-which virtualenvwrapper.sh 2>/dev/null || true
 VIRTUALENVWRAPPER_LAZY_SCRIPT="$(pyenv-which virtualenvwrapper_lazy.sh 2>/dev/null || true)"
 
 if [ -f "${VIRTUALENVWRAPPER_LAZY_SCRIPT}" ]; then
+  if [ -z "$VIRTUALENVWRAPPER_PYTHON" ]; then
+    # Set/determine outermost python for wrapper (used with hooks), if not set already
+    VIRTUALENVWRAPPER_PYTHON="$(pyenv-which python 2>/dev/null || true)"
+  fi
   echo "export VIRTUALENVWRAPPER_SCRIPT=\"${VIRTUALENVWRAPPER_SCRIPT}\";"
+  echo "export VIRTUALENVWRAPPER_PYTHON=\"${VIRTUALENVWRAPPER_PYTHON}\";"
   echo "source \"${VIRTUALENVWRAPPER_LAZY_SCRIPT}\";"
 else
   echo "virtualenvwrapper not installed." 1>&2
