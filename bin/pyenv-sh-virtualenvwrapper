@@ -6,16 +6,29 @@
 set -e
 [ -n "$PYENV_DEBUG" ] && set -x
 
-VIRTUALENVWRAPPER_SCRIPT="$(pyenv-which virtualenvwrapper.sh 2>/dev/null || true)"
-
-if [ -f "${VIRTUALENVWRAPPER_SCRIPT}" ]; then
-  if [ -z "$VIRTUALENVWRAPPER_PYTHON" ]; then
-    # Set/determine outermost python for wrapper (used with hooks), if not set already
-    VIRTUALENVWRAPPER_PYTHON="$(pyenv-which python 2>/dev/null || true)"
+virtualenvwrapper_verify_virtualenv() {
+  export VIRTUALENVWRAPPER_PYTHON="$(pyenv which python 2>/dev/null || true)"
+  export VIRTUALENVWRAPPER_VIRTUALENV="$(pyenv which virtualenv 2>/dev/null || true)"
+  export VIRTUALENVWRAPPER_SCRIPT="$(pyenv which virtualenvwrapper.sh 2>/dev/null || true)"
+  export VIRTUALENVWRAPPER_LAZY_SCRIPT="$(pyenv which virtualenvwrapper_lazy.sh 2>/dev/null || true)"
+  if [ ! -x "${VIRTUALENVWRAPPER_PYTHON}" ]; then
+    echo "pyenv-virtualenvwrapper: python is not installed." 1>&2
+    return 1
   fi
-  echo "export VIRTUALENVWRAPPER_PYTHON=\"${VIRTUALENVWRAPPER_PYTHON}\";"
+  if [ ! -x "${VIRTUALENVWRAPPER_VIRTUALENV}" ]; then
+    echo "pyenv-virtualenvwrapper: virtualenv is not installed." 1>&2
+    return 1
+  fi
+  if [ ! -x "${VIRTUALENVWRAPPER_SCRIPT}" ] || [ ! -x "${VIRTUALENVWRAPPER_LAZY_SCRIPT}" ]; then
+    echo "pyenv-virtualenvwrapper: virtualenvwrapper is not installed." 1>&2
+    return 1
+  fi
+}
+
+if virtualenvwrapper_verify_virtualenv; then
   echo "source \"${VIRTUALENVWRAPPER_SCRIPT}\""
+  # override virtualenvwrapper_verify_virtualenv of virtualenvwrapper
+  declare -f virtualenvwrapper_verify_virtualenv
 else
-  echo "virtualenvwrapper not installed." 1>&2
   echo "false"
 fi
