@@ -6,7 +6,7 @@
 set -e
 [ -n "$PYENV_DEBUG" ] && set -x
 
-virtualenvwrapper_verify_virtualenv() {
+pyenv_virtualenvwrapper_verify_virtualenv() {
   export VIRTUALENVWRAPPER_PYTHON="$(pyenv which python 2>/dev/null || true)"
   export VIRTUALENVWRAPPER_VIRTUALENV="$(pyenv which virtualenv 2>/dev/null || true)"
   export VIRTUALENVWRAPPER_SCRIPT="$(pyenv which virtualenvwrapper.sh 2>/dev/null || true)"
@@ -25,10 +25,25 @@ virtualenvwrapper_verify_virtualenv() {
   fi
 }
 
-if virtualenvwrapper_verify_virtualenv; then
-  echo "source \"${VIRTUALENVWRAPPER_SCRIPT}\""
+virtualenvwrapper_load() {
+  source "$VIRTUALENVWRAPPER_SCRIPT"
   # override virtualenvwrapper_verify_virtualenv of virtualenvwrapper
-  declare -f virtualenvwrapper_verify_virtualenv
+  virtualenvwrapper_verify_virtualenv() {
+    pyenv_virtualenvwrapper_verify_virtualenv "$@"
+  }
+}
+
+if pyenv_virtualenvwrapper_verify_virtualenv; then
+  for name in PYTHON VIRTUALENV SCRIPT LAZY_SCRIPT; do
+    var="VIRTUALENVWRAPPER_${name}"
+    echo "export ${var}=\"${!var}\""
+  done
+
+  declare -f pyenv_virtualenvwrapper_verify_virtualenv
+
+  ## eager loading
+  declare -f virtualenvwrapper_load
+  echo "virtualenvwrapper_load"
 else
   echo "false"
 fi
