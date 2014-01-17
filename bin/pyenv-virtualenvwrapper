@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+# Summary: Setup virtualenvwrapper into current shell.
+#
+# Usage: pyenv virtualenvwrapper
+
+set -e
+[ -n "$PYENV_DEBUG" ] && set -x
+
+lib() {
+  pyenv_virtualenvwrapper_verify_virtualenv() {
+    export VIRTUALENVWRAPPER_PYTHON="$(pyenv which python 2>/dev/null || true)"
+    export VIRTUALENVWRAPPER_VIRTUALENV="$(pyenv which virtualenv 2>/dev/null || true)"
+    export VIRTUALENVWRAPPER_SCRIPT="$(pyenv which virtualenvwrapper.sh 2>/dev/null || true)"
+    export VIRTUALENVWRAPPER_LAZY_SCRIPT="$(pyenv which virtualenvwrapper_lazy.sh 2>/dev/null || true)"
+    if [ ! -x "${VIRTUALENVWRAPPER_PYTHON}" ]; then
+      echo "pyenv-virtualenvwrapper: python is not installed." 1>&2
+      return 1
+    fi
+    if [ ! -x "${VIRTUALENVWRAPPER_VIRTUALENV}" ]; then
+      echo "pyenv-virtualenvwrapper: virtualenv is not installed." 1>&2
+      return 1
+    fi
+    if [ ! -x "${VIRTUALENVWRAPPER_SCRIPT}" ] || [ ! -x "${VIRTUALENVWRAPPER_LAZY_SCRIPT}" ]; then
+      echo "pyenv-virtualenvwrapper: virtualenvwrapper is not installed." 1>&2
+      return 1
+    fi
+  }
+
+  virtualenvwrapper_load() {
+    source "$VIRTUALENVWRAPPER_SCRIPT"
+    # override virtualenvwrapper_verify_virtualenv of virtualenvwrapper
+    virtualenvwrapper_verify_virtualenv() {
+      pyenv_virtualenvwrapper_verify_virtualenv "$@"
+    }
+  }
+
+  _pyenv_virtualenvwrapper_init() {
+    if ! pyenv_virtualenvwrapper_verify_virtualenv; then
+      return 1
+    fi
+
+    for name in PYTHON VIRTUALENV SCRIPT LAZY_SCRIPT; do
+      var="VIRTUALENVWRAPPER_${name}"
+      echo "export ${var}=\"${!var}\""
+    done
+
+    declare -f pyenv_virtualenvwrapper_verify_virtualenv
+  }
+
+  pyenv_virtualenvwrapper_init() {
+    _pyenv_virtualenvwrapper_init || return 1
+    declare -f virtualenvwrapper_load
+    echo "virtualenvwrapper_load"
+  }
+
+  pyenv_virtualenvwrapper_lazy_init() {
+    _pyenv_virtualenvwrapper_init || return 1
+    echo "source \"${VIRTUALENVWRAPPER_LAZY_SCRIPT}\""
+    declare -f virtualenvwrapper_load
+  }
+
+  if [ "$1" == "--$FUNCNAME" ]; then
+    declare -f "$FUNCNAME"
+    echo "$FUNCNAME \"\$1\";"
+    exit
+  fi
+}
+lib "$1"
+
+{ printf "\x1B[31;1m"
+  echo
+  echo "Failed to initialize virtualenvwrapper."
+  echo
+  echo "Perhaps pyenv-virtualenvwrapper has not been loaded into your shell properly."
+  echo "Please restart current shell and try again."
+  echo
+  printf "\x1B[0m"
+} 1>&2

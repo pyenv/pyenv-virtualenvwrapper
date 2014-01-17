@@ -1,49 +1,15 @@
 #!/usr/bin/env bash
-# Summary: Setup virtualenvwrapper into current shell.
+# Summary: Setup virtualenvwrapper_lazy into current shell.
 #
 # Usage: pyenv virtualenvwrapper_lazy
 
 set -e
 [ -n "$PYENV_DEBUG" ] && set -x
 
-pyenv_virtualenvwrapper_verify_virtualenv() {
-  export VIRTUALENVWRAPPER_PYTHON="$(pyenv which python 2>/dev/null || true)"
-  export VIRTUALENVWRAPPER_VIRTUALENV="$(pyenv which virtualenv 2>/dev/null || true)"
-  export VIRTUALENVWRAPPER_SCRIPT="$(pyenv which virtualenvwrapper.sh 2>/dev/null || true)"
-  export VIRTUALENVWRAPPER_LAZY_SCRIPT="$(pyenv which virtualenvwrapper_lazy.sh 2>/dev/null || true)"
-  if [ ! -x "${VIRTUALENVWRAPPER_PYTHON}" ]; then
-    echo "pyenv-virtualenvwrapper: python is not installed." 1>&2
-    return 1
-  fi
-  if [ ! -x "${VIRTUALENVWRAPPER_VIRTUALENV}" ]; then
-    echo "pyenv-virtualenvwrapper: virtualenv is not installed." 1>&2
-    return 1
-  fi
-  if [ ! -x "${VIRTUALENVWRAPPER_SCRIPT}" ] || [ ! -x "${VIRTUALENVWRAPPER_LAZY_SCRIPT}" ]; then
-    echo "pyenv-virtualenvwrapper: virtualenvwrapper is not installed." 1>&2
-    return 1
-  fi
+# Load shared library function
+eval "$(pyenv-virtualenvwrapper --lib)"
+
+pyenv_virtualenvwrapper_lazy_init || {
+  echo "pyenv-virtualenvwrapper: failed to initialize virtualenvwrapper_lazy." 1>&2
+  exit 1
 }
-
-virtualenvwrapper_load() {
-  source "$VIRTUALENVWRAPPER_SCRIPT"
-  # override virtualenvwrapper_verify_virtualenv of virtualenvwrapper
-  virtualenvwrapper_verify_virtualenv() {
-    pyenv_virtualenvwrapper_verify_virtualenv "$@"
-  }
-}
-
-if pyenv_virtualenvwrapper_verify_virtualenv; then
-  for name in PYTHON VIRTUALENV SCRIPT LAZY_SCRIPT; do
-    var="VIRTUALENVWRAPPER_${name}"
-    echo "export ${var}=\"${!var}\""
-  done
-
-  declare -f pyenv_virtualenvwrapper_verify_virtualenv
-
-  ## lazy loading
-  echo "source \"${VIRTUALENVWRAPPER_LAZY_SCRIPT}\""
-  declare -f virtualenvwrapper_load
-else
-  echo "false"
-fi
