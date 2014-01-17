@@ -7,54 +7,91 @@ set -e
 [ -n "$PYENV_DEBUG" ] && set -x
 
 lib() {
-  pyenv_virtualenvwrapper_verify_virtualenv() {
-    export VIRTUALENVWRAPPER_PYTHON="$(pyenv which python 2>/dev/null || true)"
-    export VIRTUALENVWRAPPER_VIRTUALENV="$(pyenv which virtualenv 2>/dev/null || true)"
-    export VIRTUALENVWRAPPER_SCRIPT="$(pyenv which virtualenvwrapper.sh 2>/dev/null || true)"
-    export VIRTUALENVWRAPPER_LAZY_SCRIPT="$(pyenv which virtualenvwrapper_lazy.sh 2>/dev/null || true)"
-    if [ ! -x "${VIRTUALENVWRAPPER_PYTHON}" ]; then
-      echo "pyenv-virtualenvwrapper: python is not installed." 1>&2
-      return 1
+  pyenv_virtualenvwrapper_load() {
+    local version="$(pyenv version-name)"
+    if [[ "${PYENV_VIRTUALENVWRAPPER_PYENV_VERSION}" != "${version}" ]]; then
+      unset PYENV_VIRTUALENVWRAPPER_PYENV_VERSION
+      export VIRTUALENVWRAPPER_SCRIPT="$(pyenv which virtualenvwrapper.sh 2>/dev/null || true)"
+      export VIRTUALENVWRAPPER_LAZY_SCRIPT="$(pyenv which virtualenvwrapper_lazy.sh 2>/dev/null || true)"
+      if [ ! -x "${VIRTUALENVWRAPPER_SCRIPT}" ] || [ ! -x "${VIRTUALENVWRAPPER_LAZY_SCRIPT}" ]; then
+        echo "pyenv-virtualenvwrapper: ${version}: virtualenvwrapper is not available." 1>&2
+        return 1
+      fi
+
+      export VIRTUALENVWRAPPER_VIRTUALENV_CLONE="$(pyenv which virtualenv-clone 2>/dev/null || true)"
+      if [ ! -x "${VIRTUALENVWRAPPER_VIRTUALENV_CLONE}" ]; then
+        echo "pyenv-virtualenvwrapper: ${version}: virtualenv-clone is not available." 1>&2
+        return 1
+      fi
+
+      export VIRTUALENVWRAPPER_VIRTUALENV="$(pyenv which virtualenv 2>/dev/null || true)"
+      if [ ! -x "${VIRTUALENVWRAPPER_VIRTUALENV}" ]; then
+        echo "pyenv-virtualenvwrapper: ${version}: virtualenv is not available." 1>&2
+        return 1
+      fi
+
+      export VIRTUALENVWRAPPER_PYTHON="$(pyenv which python 2>/dev/null || true)"
+      if [ ! -x "${VIRTUALENVWRAPPER_PYTHON}" ]; then
+        echo "pyenv-virtualenvwrapper: ${version}: python is not available." 1>&2
+        return 1
+      fi
     fi
-    if [ ! -x "${VIRTUALENVWRAPPER_VIRTUALENV}" ]; then
-      echo "pyenv-virtualenvwrapper: virtualenv is not installed." 1>&2
-      return 1
-    fi
-    if [ ! -x "${VIRTUALENVWRAPPER_SCRIPT}" ] || [ ! -x "${VIRTUALENVWRAPPER_LAZY_SCRIPT}" ]; then
-      echo "pyenv-virtualenvwrapper: virtualenvwrapper is not installed." 1>&2
+    export PYENV_VIRTUALENVWRAPPER_PYENV_VERSION="${version}"
+  }
+
+  pyenv_virtualenvwrapper_verify_resource() {
+    if ! ( pyenv which "$1" >/dev/null 2>&1 || [ -e "$1" ] ); then
+      echo "pyenv-virtualenvwrapper: could not find $1 in your pyenv" 1>&2
       return 1
     fi
   }
 
   virtualenvwrapper_load() {
+    pyenv_virtualenvwrapper_load || return 1
     source "$VIRTUALENVWRAPPER_SCRIPT"
-    # override virtualenvwrapper_verify_virtualenv of virtualenvwrapper
-    virtualenvwrapper_verify_virtualenv() {
-      pyenv_virtualenvwrapper_verify_virtualenv "$@"
+
+    # preserve original virtualenvwrapper_verify_workon_home
+    eval "$(echo "pyenv_virtualenvwrapper_verify_workon_home() {"; declare -f virtualenvwrapper_verify_workon_home 2>/dev/null | tail -n +2 || echo "true;}")"
+    virtualenvwrapper_verify_workon_home() {
+      pyenv_virtualenvwrapper_load || return 1
+      pyenv_virtualenvwrapper_verify_workon_home "$@"
+    }
+
+    # override virtualenvwrapper_verify_resource
+    virtualenvwrapper_verify_resource() {
+      pyenv_virtualenvwrapper_load || return 1
+      pyenv_virtualenvwrapper_verify_resource "$@"
     }
   }
 
   _pyenv_virtualenvwrapper_init() {
-    if ! pyenv_virtualenvwrapper_verify_virtualenv; then
+    local vars=(PYTHON VIRTUALENV VIRTUALENV_CLONE SCRIPT LAZY_SCRIPT)
+    pyenv_virtualenvwrapper_load || {
+      echo "unset PYENV_VIRTUALENVWRAPPER_PYENV_VERSION"
       return 1
-    fi
-
-    for name in PYTHON VIRTUALENV SCRIPT LAZY_SCRIPT; do
+    }
+    for name in "${vars[@]}"; do
       var="VIRTUALENVWRAPPER_${name}"
       echo "export ${var}=\"${!var}\""
     done
-
-    declare -f pyenv_virtualenvwrapper_verify_virtualenv
+    declare -f pyenv_virtualenvwrapper_load
+    declare -f pyenv_virtualenvwrapper_verify_resource
   }
 
   pyenv_virtualenvwrapper_init() {
-    _pyenv_virtualenvwrapper_init || return 1
+    _pyenv_virtualenvwrapper_init || {
+      echo "pyenv-virtualenvwrapper: failed to initialize virtualenvwrapper." 1>&2
+      exit 1
+    }
     declare -f virtualenvwrapper_load
     echo "virtualenvwrapper_load"
   }
 
   pyenv_virtualenvwrapper_lazy_init() {
-    _pyenv_virtualenvwrapper_init || return 1
+    _pyenv_virtualenvwrapper_init || {
+      echo "pyenv-virtualenvwrapper: failed to initialize virtualenvwrapper_lazy." 1>&2
+      exit 1
+    }
     echo "source \"${VIRTUALENVWRAPPER_LAZY_SCRIPT}\""
     declare -f virtualenvwrapper_load
   }
