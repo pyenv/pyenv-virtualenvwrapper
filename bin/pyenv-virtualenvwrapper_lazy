@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Summary: Setup virtualenvwrapper_lazy into current shell.
+#
+# Usage: pyenv virtualenvwrapper_lazy
+
+set -e
+[ -n "$PYENV_DEBUG" ] && set -x
+
+pyenv-virtualenvwrapper "$@"
