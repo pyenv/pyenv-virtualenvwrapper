@@ -14,7 +14,9 @@ if [ "$1" == "--unset" ]; then
   exit
 fi
 
-pyenv_virtualenvwrapper_lazy_init || {
+pyenv_virtualenvwrapper_init || {
   echo "pyenv-virtualenvwrapper: failed to initialize virtualenvwrapper_lazy." 1>&2
   exit 1
 }
+echo "source \"${VIRTUALENVWRAPPER_LAZY_SCRIPT}\""
+declare -f virtualenvwrapper_load

@@ -18,3 +18,5 @@ pyenv_virtualenvwrapper_init || {
   echo "pyenv-virtualenvwrapper: failed to initialize virtualenvwrapper." 1>&2
   exit 1
 }
+declare -f virtualenvwrapper_load
+echo "virtualenvwrapper_load"
