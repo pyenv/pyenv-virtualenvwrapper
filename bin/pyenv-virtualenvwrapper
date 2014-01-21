@@ -101,3 +101,4 @@ lib "$1"
   echo
   printf "\x1B[0m"
 } 1>&2
+exit 1
