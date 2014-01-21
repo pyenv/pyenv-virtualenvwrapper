@@ -57,7 +57,7 @@ lib() {
     source "$VIRTUALENVWRAPPER_SCRIPT"
 
     # preserve original virtualenvwrapper_verify_workon_home
-    eval "$(echo "pyenv_virtualenvwrapper_verify_workon_home() {"; declare -f virtualenvwrapper_verify_workon_home 2>/dev/null | tail -n +2 || echo "true;}")"
+    eval "$(echo "pyenv_virtualenvwrapper_verify_workon_home() {";{ declare -f virtualenvwrapper_verify_workon_home 2>/dev/null || printf "\ntrue;}\n";} | tail -n +2)"
     virtualenvwrapper_verify_workon_home() {
       pyenv_virtualenvwrapper_load || return 1
       pyenv_virtualenvwrapper_verify_workon_home "$@"
