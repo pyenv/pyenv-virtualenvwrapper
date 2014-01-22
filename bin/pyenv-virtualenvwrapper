@@ -46,10 +46,17 @@ lib() {
   }
 
   pyenv_virtualenvwrapper_verify_resource() {
-    if ! ( pyenv which "$1" >/dev/null 2>&1 || [ -e "$1" ] ); then
-      echo "pyenv-virtualenvwrapper: could not find $1 in your pyenv" 1>&2
-      return 1
+    if [ "$1" = "${1##*/}" ]; then
+      if pyenv which "$1" >/dev/null 2>&1; then
+        return 0
+      fi
+    else
+      if [ -e "$1" ]; then
+        return 0
+      fi
     fi
+    echo "pyenv-virtualenvwrapper: could not find $1 in your path" 1>&2
+    return 1
   }
 
   virtualenvwrapper_load() {
@@ -76,6 +83,7 @@ lib() {
       echo "unset PYENV_VIRTUALENVWRAPPER_PYENV_VERSION"
       return 1
     }
+    echo "export PYENV_VIRTUALENVWRAPPER_PYENV_VERSION=\"${PYENV_VIRTUALENVWRAPPER_PYENV_VERSION}\""
     for name in "${vars[@]}"; do
       var="VIRTUALENVWRAPPER_${name}"
       echo "export ${var}=\"${!var}\""
