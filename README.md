@@ -61,6 +61,16 @@ or, if you favor `virtualenvwrapper_lazy.sh`,
 
 ## Version History
 
+#### 20140122
+
+  * Display errors when `pyenv virtualenvwrapper` is invoked as a command
+  * Declare `VIRTUALENVWRAPPER_PYTHON` and `VIRTUALENVWRAPPER_VIRTUALENV` properly
+    to follow the version changes in `pyenv` (#9, #10, #11)
+  * Install `virtualenvwrapper` if it is not installed
+  * Add `--unset` option for `virtualenvwrapper` and `virtualenvwrapper_lazy`
+  * Fix broken install script
+  * Add tests
+
 #### 20130614
 
  * Improve error logging.

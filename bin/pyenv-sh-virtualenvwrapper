@@ -9,10 +9,16 @@ set -e
 # Load shared library function
 eval "$(pyenv-virtualenvwrapper --lib)"
 
-if [ "$1" == "--unset" ]; then
+case "$1" in
+"--unset" )
   echo "unset PYENV_VIRTUALENVWRAPPER_PYENV_VERSION"
   exit
-fi
+  ;;
+"--version" )
+  echo "echo \"pyenv-virtualenvwrapper v${PYENV_VIRTUALENVWRAPPER_VERSION}\""
+  exit
+  ;;
+esac
 
 pyenv_virtualenvwrapper_init || {
   echo "pyenv-virtualenvwrapper: failed to initialize virtualenvwrapper." 1>&2

@@ -7,6 +7,8 @@ set -e
 [ -n "$PYENV_DEBUG" ] && set -x
 
 lib() {
+  export PYENV_VIRTUALENVWRAPPER_VERSION="20140122"
+
   pyenv_virtualenvwrapper_load() {
     local version="$(pyenv version-name)"
     local STATUS=0
