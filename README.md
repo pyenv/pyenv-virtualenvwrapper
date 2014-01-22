@@ -1,5 +1,7 @@
 # pyenv-virtualenvwrapper
 
+[![Build Status](https://travis-ci.org/yyuu/pyenv-virtualenvwrapper.png)](https://travis-ci.org/yyuu/pyenv-virtualenvwrapper)
+
 An [alternative approach](https://github.com/yyuu/pyenv-virtualenv) to manage virtualenvs from pyenv.
 
 pyenv-virtualenvwrapper is a [pyenv](https://github.com/yyuu/pyenv) plugin
