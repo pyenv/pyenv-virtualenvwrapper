@@ -15,24 +15,13 @@ with [virtualenvwrapper](http://pypi.python.org/pypi/virtualenvwrapper).
 Because virtualenvwrapper is depending on python, you must first install
 at least one version of python.
 
-For example, install `2.7.3` and set it as `global` in pyenv.
+For example, install `2.7.6` and set it as `global` in pyenv.
 
-    $ pyenv install 2.7.3
-    $ pyenv global 2.7.3
+    $ pyenv install 2.7.6
+    $ pyenv global 2.7.6
 
 (NOTICE: virtualenvwrapper will not work if you remove the python version
 which is bound to virtualenvwrapper.)
-
-### Installing virtualenvwrapper
-
-Installing virtualenvwrapper into your python.
-
-    $ pip install virtualenvwrapper
-    $ pyenv rehash
-
-(NOTICE: if you have multiple python versions in pyenv, it is better to
-install virtualenvwrapper into all the versions of python which you want
-to work with virtualenvwrapper.)
 
 ### Installing pyenv-virtualenvwrapper as a pyenv plugin
 
