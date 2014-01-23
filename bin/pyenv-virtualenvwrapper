@@ -106,8 +106,15 @@ lib() {
 }
 lib "$1"
 
+virtualenvwrapper_version() {
+  local info="$(pyenv exec pip show virtualenvwrapper 2>/dev/null || true)"
+  local version="$(echo "${info}" | grep 'Version:' | head -n 1 || true)"
+  version="${version##Version: }"
+  echo "${version:-unknown}"
+}
+
 if [ "$1" == "--version" ]; then
-  echo "pyenv-virtualenvwrapper v${PYENV_VIRTUALENVWRAPPER_VERSION}"
+  echo "pyenv-virtualenvwrapper ${PYENV_VIRTUALENVWRAPPER_VERSION} (virtualenvwrapper $(virtualenvwrapper_version))"
   exit
 fi
 
