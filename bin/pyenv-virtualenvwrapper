@@ -6,9 +6,9 @@
 set -e
 [ -n "$PYENV_DEBUG" ] && set -x
 
-lib() {
-  export PYENV_VIRTUALENVWRAPPER_VERSION="20140122"
+PYENV_VIRTUALENVWRAPPER_VERSION="20140122"
 
+lib() {
   pyenv_virtualenvwrapper_load() {
     local version="$(pyenv version-name)"
     local STATUS=0
@@ -105,6 +105,11 @@ lib() {
   fi
 }
 lib "$1"
+
+if [ "$1" == "--version" ]; then
+  echo "pyenv-virtualenvwrapper v${PYENV_VIRTUALENVWRAPPER_VERSION}"
+  exit
+fi
 
 { printf "\x1B[31;1m"
   echo

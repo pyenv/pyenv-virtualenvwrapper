@@ -15,7 +15,7 @@ case "$1" in
   exit
   ;;
 "--version" )
-  echo "echo \"pyenv-virtualenvwrapper_lazy v${PYENV_VIRTUALENVWRAPPER_VERSION}\""
+  echo "echo \"$(pyenv-virtualenvwrapper_lazy --version)\""
   exit
   ;;
 esac
