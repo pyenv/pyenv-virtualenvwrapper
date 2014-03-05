@@ -35,6 +35,21 @@ the `~/.pyenv/plugins/pyenv-virtualenvwrapper` directory. From that directory, y
 can check out a specific release tag. To update pyenv-virtualenvwrapper, run `git
 pull` to download the latest changes.
 
+### Installing with Homebrew (for OS X users)
+
+Mac OS X users can install pyenv-virtualenvwrapper with the
+[Homebrew](http://brew.sh) package manager.
+
+*This is recommended method of installation if you installed pyenv
+ with Homebrew.*
+
+    brew install pyenv-virtualenvwrapper
+
+Or, if you would like to install the latest development release:
+
+    brew install --HEAD pyenv-virtualenvwrapper
+
+
 ## Usage
 
 ### Using `pyenv virtualenvwrapper`
