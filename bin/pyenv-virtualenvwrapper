@@ -11,7 +11,6 @@ PYENV_VIRTUALENVWRAPPER_VERSION="20140122"
 lib() {
   pyenv_virtualenvwrapper_load() {
     local version="$(pyenv version-name)"
-    local STATUS=0
     if [[ "${PYENV_VIRTUALENVWRAPPER_PYENV_VERSION}" != "${version}" ]]; then
       unset PYENV_VIRTUALENVWRAPPER_PYENV_VERSION
 
@@ -22,39 +21,59 @@ lib() {
       fi
 
       export VIRTUALENVWRAPPER_SCRIPT="${prefix}/bin/virtualenvwrapper.sh"
+      [ -f "${VIRTUALENVWRAPPER_SCRIPT}" ] || {
+        export VIRTUALENVWRAPPER_SCRIPT="$(pyenv which virtualenvwrapper.sh 2>/dev/null || true)"
+        [ -f "${VIRTUALENVWRAPPER_SCRIPT}" ] || {
+          ( local VIRTUALENVWRAPPER_VERSION="==${VIRTUALENVWRAPPER_VERSION}"
+            unset PIP_REQUIRE_VENV
+            unset PIP_REQUIRE_VIRTUALENV
+            pyenv exec pip install $QUIET $VERBOSE "virtualenvwrapper${VIRTUALENVWRAPPER_VERSION%==}"
+          ) 1>&2
+          export VIRTUALENVWRAPPER_SCRIPT="$(pyenv which virtualenvwrapper.sh 2>/dev/null || true)"
+          [ -f "${VIRTUALENVWRAPPER_SCRIPT}" ] || {
+            echo "pyenv-virtualenvwrapper: ${version}: virtualenvwrapper.sh is not available." 1>&2
+            return 1
+          }
+        }
+      }
+
       export VIRTUALENVWRAPPER_LAZY_SCRIPT="${prefix}/bin/virtualenvwrapper_lazy.sh"
+      [ -f "${VIRTUALENVWRAPPER_LAZY_SCRIPT}" ] || {
+        export VIRTUALENVWRAPPER_LAZY_SCRIPT="$(pyenv which virtualenvwrapper_lazy.sh 2>/dev/null || true)"
+        [ -f "${VIRTUALENVWRAPPER_LAZY_SCRIPT}" ] || {
+          echo "pyenv-virtualenvwrapper: ${version}: virtualenvwrapper_lazy.sh is not available." 1>&2
+          return 1
+        }
+      }
+
       export VIRTUALENVWRAPPER_VIRTUALENV_CLONE="${prefix}/bin/virtualenv-clone"
+      [ -x "${VIRTUALENVWRAPPER_VIRTUALENV_CLONE}" ] || {
+        export VIRTUALENVWRAPPER_VIRTUALENV_CLONE="$(pyenv which virtualenv-clone 2>/dev/null || true)"
+        [ -x "${VIRTUALENVWRAPPER_VIRTUALENV_CLONE}" ] || {
+          echo "pyenv-virtualenvwrapper: ${version}: virtualenv-clone is not available." 1>&2
+          return 1
+        }
+      }
+
       export VIRTUALENVWRAPPER_VIRTUALENV="${prefix}/bin/virtualenv"
+      [ -x "${VIRTUALENVWRAPPER_VIRTUALENV}" ] || {
+        export VIRTUALENVWRAPPER_VIRTUALENV="$(pyenv which virtualenv 2>/dev/null || true)"
+        [ -x "${VIRTUALENVWRAPPER_VIRTUALENV}" ] || {
+          echo "pyenv-virtualenvwrapper: ${version}: virtualenv is not available." 1>&2
+          return 1
+        }
+      }
+
       export VIRTUALENVWRAPPER_PYTHON="${prefix}/bin/python"
-
-      if [ ! -f "${VIRTUALENVWRAPPER_SCRIPT}" ]; then
-        (
-          local VIRTUALENVWRAPPER_VERSION="==${VIRTUALENVWRAPPER_VERSION}"
-
-          unset PIP_REQUIRE_VENV
-          unset PIP_REQUIRE_VIRTUALENV
-
-          pyenv exec pip install $QUIET $VERBOSE "virtualenvwrapper${VIRTUALENVWRAPPER_VERSION%==}" 1>&2
-        )
-      fi
-
-      if [ ! -x "${VIRTUALENVWRAPPER_VIRTUALENV_CLONE}" ]; then
-        echo "pyenv-virtualenvwrapper: ${version}: virtualenv-clone is not available." 1>&2
-        STATUS=1
-      fi
-
-      if [ ! -x "${VIRTUALENVWRAPPER_VIRTUALENV}" ]; then
-        echo "pyenv-virtualenvwrapper: ${version}: virtualenv is not available." 1>&2
-        STATUS=1
-      fi
-
-      if [ ! -x "${VIRTUALENVWRAPPER_PYTHON}" ]; then
-        echo "pyenv-virtualenvwrapper: ${version}: python is not available." 1>&2
-        STATUS=1
-      fi
+      [ -x "${VIRTUALENVWRAPPER_PYTHON}" ] || {
+        export VIRTUALENVWRAPPER_PYTHON="$(pyenv which python 2>/dev/null || true)"
+        [ -x "${VIRTUALENVWRAPPER_PYTHON}" ] || {
+          echo "pyenv-virtualenvwrapper: ${version}: python is not available." 1>&2
+          return 1
+        }
+      }
     fi
     export PYENV_VIRTUALENVWRAPPER_PYENV_VERSION="${version}"
-    return "$STATUS"
   }
 
   pyenv_virtualenvwrapper_verify_resource() {
