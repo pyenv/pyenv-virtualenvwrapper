@@ -14,15 +14,19 @@ lib() {
     local STATUS=0
     if [[ "${PYENV_VIRTUALENVWRAPPER_PYENV_VERSION}" != "${version}" ]]; then
       unset PYENV_VIRTUALENVWRAPPER_PYENV_VERSION
-      pyenv which virtualenvwrapper.sh 1>/dev/null 2>&1 || (
-        local VIRTUALENVWRAPPER_VERSION="==${VIRTUALENVWRAPPER_VERSION}"
+      VIRTUALENVWRAPPER_SCRIPT="$(pyenv which virtualenvwrapper.sh 2>/dev/null || true)"
+      if [[ -z "$VIRTUALENVWRAPPER_SCRIPT" ]]; then
+        (
+          local VIRTUALENVWRAPPER_VERSION="==${VIRTUALENVWRAPPER_VERSION}"
 
-        unset PIP_REQUIRE_VENV
-        unset PIP_REQUIRE_VIRTUALENV
+          unset PIP_REQUIRE_VENV
+          unset PIP_REQUIRE_VIRTUALENV
 
-        pyenv exec pip install $QUIET $VERBOSE "virtualenvwrapper${VIRTUALENVWRAPPER_VERSION%==}" 1>&2
-      )
-      export VIRTUALENVWRAPPER_SCRIPT="$(pyenv which virtualenvwrapper.sh 2>/dev/null || true)"
+          pyenv exec pip install $QUIET $VERBOSE "virtualenvwrapper${VIRTUALENVWRAPPER_VERSION%==}" 1>&2
+        )
+        VIRTUALENVWRAPPER_SCRIPT="$(pyenv which virtualenvwrapper.sh 2>/dev/null || true)"
+      fi
+      export VIRTUALENVWRAPPER_SCRIPT
       export VIRTUALENVWRAPPER_LAZY_SCRIPT="$(pyenv which virtualenvwrapper_lazy.sh 2>/dev/null || true)"
       if [ ! -x "${VIRTUALENVWRAPPER_SCRIPT}" ] || [ ! -x "${VIRTUALENVWRAPPER_LAZY_SCRIPT}" ]; then
         echo "pyenv-virtualenvwrapper: ${version}: virtualenvwrapper is not available." 1>&2
