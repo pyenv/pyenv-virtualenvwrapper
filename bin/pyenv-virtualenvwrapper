@@ -21,28 +21,22 @@ lib() {
       fi
 
       export VIRTUALENVWRAPPER_SCRIPT="${prefix}/bin/virtualenvwrapper.sh"
-      [ -f "${VIRTUALENVWRAPPER_SCRIPT}" ] || {
+      export VIRTUALENVWRAPPER_LAZY_SCRIPT="${prefix}/bin/virtualenvwrapper_lazy.sh"
+      [ -f "${VIRTUALENVWRAPPER_SCRIPT}" -a -f "${VIRTUALENVWRAPPER_LAZY_SCRIPT}" ] || {
         export VIRTUALENVWRAPPER_SCRIPT="$(pyenv which virtualenvwrapper.sh 2>/dev/null || true)"
-        [ -f "${VIRTUALENVWRAPPER_SCRIPT}" ] || {
+        export VIRTUALENVWRAPPER_LAZY_SCRIPT="$(pyenv which virtualenvwrapper_lazy.sh 2>/dev/null || true)"
+        [ -f "${VIRTUALENVWRAPPER_SCRIPT}" -a -f "${VIRTUALENVWRAPPER_LAZY_SCRIPT}" ] || {
           ( local VIRTUALENVWRAPPER_VERSION="==${VIRTUALENVWRAPPER_VERSION}"
             unset PIP_REQUIRE_VENV
             unset PIP_REQUIRE_VIRTUALENV
             pyenv exec pip install $QUIET $VERBOSE "virtualenvwrapper${VIRTUALENVWRAPPER_VERSION%==}"
           ) 1>&2
           export VIRTUALENVWRAPPER_SCRIPT="$(pyenv which virtualenvwrapper.sh 2>/dev/null || true)"
-          [ -f "${VIRTUALENVWRAPPER_SCRIPT}" ] || {
-            echo "pyenv-virtualenvwrapper: ${version}: virtualenvwrapper.sh is not available." 1>&2
+          export VIRTUALENVWRAPPER_LAZY_SCRIPT="$(pyenv which virtualenvwrapper_lazy.sh 2>/dev/null || true)"
+          [ -f "${VIRTUALENVWRAPPER_SCRIPT}" -a -f "${VIRTUALENVWRAPPER_LAZY_SCRIPT}" ] || {
+            echo "pyenv-virtualenvwrapper: ${version}: either virtualenvwrapper.sh or virtualenvwrapper_lazy.sh is not available." 1>&2
             return 1
           }
-        }
-      }
-
-      export VIRTUALENVWRAPPER_LAZY_SCRIPT="${prefix}/bin/virtualenvwrapper_lazy.sh"
-      [ -f "${VIRTUALENVWRAPPER_LAZY_SCRIPT}" ] || {
-        export VIRTUALENVWRAPPER_LAZY_SCRIPT="$(pyenv which virtualenvwrapper_lazy.sh 2>/dev/null || true)"
-        [ -f "${VIRTUALENVWRAPPER_LAZY_SCRIPT}" ] || {
-          echo "pyenv-virtualenvwrapper: ${version}: virtualenvwrapper_lazy.sh is not available." 1>&2
-          return 1
         }
       }
 
