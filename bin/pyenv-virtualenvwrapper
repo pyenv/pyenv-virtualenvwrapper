@@ -90,16 +90,18 @@ lib() {
   }
 
   pyenv_virtualenvwrapper_init() {
-    local vars=(PYTHON VIRTUALENV VIRTUALENV_CLONE SCRIPT LAZY_SCRIPT)
     pyenv_virtualenvwrapper_load || {
       echo "unset PYENV_VIRTUALENVWRAPPER_PYENV_VERSION"
       return 1
     }
     echo "export PYENV_VIRTUALENVWRAPPER_PYENV_VERSION=\"${PYENV_VIRTUALENVWRAPPER_PYENV_VERSION}\""
-    for name in "${vars[@]}"; do
-      var="VIRTUALENVWRAPPER_${name}"
-      echo "export ${var}=\"${!var}\""
-    done
+
+    echo "export VIRTUALENVWRAPPER_PYTHON=\"${VIRTUALENVWRAPPER_PYTHON}\""
+    echo "export VIRTUALENVWRAPPER_VIRTUALENV=\"${VIRTUALENVWRAPPER_VIRTUALENV}\""
+    echo "export VIRTUALENVWRAPPER_VIRTUALENV_CLONE=\"${VIRTUALENVWRAPPER_VIRTUALENV_CLONE}\""
+    echo "export VIRTUALENVWRAPPER_SCRIPT=\"${VIRTUALENVWRAPPER_SCRIPT}\""
+    echo "export VIRTUALENVWRAPPER_LAZY_SCRIPT=\"${VIRTUALENVWRAPPER_LAZY_SCRIPT}\""
+
     declare -f pyenv_virtualenvwrapper_load
     declare -f pyenv_virtualenvwrapper_verify_resource
   }
