@@ -33,13 +33,8 @@ create_executable() {
 
 @test "install virtualenvwrapper if not available" {
   stub pyenv "version-name : echo \"${PYENV_VERSION}\""
-  stub pyenv "which virtualenvwrapper.sh : false"
+  stub pyenv "prefix ${PYENV_VERSION} : echo \"${PYENV_ROOT}/versions/${PYENV_VERSION}\""
   stub pyenv "exec pip install virtualenvwrapper : echo \"\$@\""
-  stub pyenv "which virtualenvwrapper.sh : echo \"${BATS_TEST_DIRNAME}/libexec/virtualenvwrapper.sh\""
-  stub pyenv "which virtualenvwrapper_lazy.sh : echo \"${BATS_TEST_DIRNAME}/libexec/virtualenvwrapper_lazy.sh\""
-  stub pyenv "which virtualenv-clone : echo \"${PYENV_ROOT}/versions/${PYENV_VERSION}/bin/virtualenv-clone\""
-  stub pyenv "which virtualenv : echo \"${PYENV_ROOT}/versions/${PYENV_VERSION}/bin/virtualenv\""
-  stub pyenv "which python : echo \"${PYENV_ROOT}/versions/${PYENV_VERSION}/bin/python\""
 
   VIRTUALENVWRAPPER_VERSION="" run pyenv-sh-virtualenvwrapper
 
@@ -50,13 +45,8 @@ create_executable() {
 
 @test "install virtualenvwrapper version if not available" {
   stub pyenv "version-name : echo \"${PYENV_VERSION}\""
-  stub pyenv "which virtualenvwrapper.sh : false"
+  stub pyenv "prefix ${PYENV_VERSION} : echo \"${PYENV_ROOT}/versions/${PYENV_VERSION}\""
   stub pyenv "exec pip install virtualenvwrapper==4.2 : echo \"\$@\""
-  stub pyenv "which virtualenvwrapper.sh : echo \"${BATS_TEST_DIRNAME}/libexec/virtualenvwrapper.sh\""
-  stub pyenv "which virtualenvwrapper_lazy.sh : echo \"${BATS_TEST_DIRNAME}/libexec/virtualenvwrapper_lazy.sh\""
-  stub pyenv "which virtualenv-clone : echo \"${PYENV_ROOT}/versions/${PYENV_VERSION}/bin/virtualenv-clone\""
-  stub pyenv "which virtualenv : echo \"${PYENV_ROOT}/versions/${PYENV_VERSION}/bin/virtualenv\""
-  stub pyenv "which python : echo \"${PYENV_ROOT}/versions/${PYENV_VERSION}/bin/python\""
 
   VIRTUALENVWRAPPER_VERSION="4.2" run pyenv-sh-virtualenvwrapper
 
@@ -67,13 +57,8 @@ create_executable() {
 
 @test "install virtualenvwrapper with unsetting troublesome pip options" {
   stub pyenv "version-name : echo \"${PYENV_VERSION}\""
-  stub pyenv "which virtualenvwrapper.sh : false"
+  stub pyenv "prefix ${PYENV_VERSION} : echo \"${PYENV_ROOT}/versions/${PYENV_VERSION}\""
   stub pyenv "exec pip install virtualenvwrapper : echo PIP_REQUIRE_VENV=\${PIP_REQUIRE_VENV} \"\$@\""
-  stub pyenv "which virtualenvwrapper.sh : echo \"${BATS_TEST_DIRNAME}/libexec/virtualenvwrapper.sh\""
-  stub pyenv "which virtualenvwrapper_lazy.sh : echo \"${BATS_TEST_DIRNAME}/libexec/virtualenvwrapper_lazy.sh\""
-  stub pyenv "which virtualenv-clone : echo \"${PYENV_ROOT}/versions/${PYENV_VERSION}/bin/virtualenv-clone\""
-  stub pyenv "which virtualenv : echo \"${PYENV_ROOT}/versions/${PYENV_VERSION}/bin/virtualenv\""
-  stub pyenv "which python : echo \"${PYENV_ROOT}/versions/${PYENV_VERSION}/bin/python\""
 
   PIP_REQUIRE_VENV="true" VIRTUALENVWRAPPER_VERSION="" run pyenv-sh-virtualenvwrapper
 

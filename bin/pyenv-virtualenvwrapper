@@ -14,8 +14,20 @@ lib() {
     local STATUS=0
     if [[ "${PYENV_VIRTUALENVWRAPPER_PYENV_VERSION}" != "${version}" ]]; then
       unset PYENV_VIRTUALENVWRAPPER_PYENV_VERSION
-      VIRTUALENVWRAPPER_SCRIPT="$(pyenv which virtualenvwrapper.sh 2>/dev/null || true)"
-      if [[ -z "$VIRTUALENVWRAPPER_SCRIPT" ]]; then
+
+      local prefix="$(pyenv prefix "${version%%:*}" 2>/dev/null || true)"
+      if [ ! -d "${prefix}" ]; then
+        echo "pyenv-virtualenvwrapper: no such directory: ${prefix}" 1>&2
+        return 1
+      fi
+
+      export VIRTUALENVWRAPPER_SCRIPT="${prefix}/bin/virtualenvwrapper.sh"
+      export VIRTUALENVWRAPPER_LAZY_SCRIPT="${prefix}/bin/virtualenvwrapper_lazy.sh"
+      export VIRTUALENVWRAPPER_VIRTUALENV_CLONE="${prefix}/bin/virtualenv-clone"
+      export VIRTUALENVWRAPPER_VIRTUALENV="${prefix}/bin/virtualenv"
+      export VIRTUALENVWRAPPER_PYTHON="${prefix}/bin/python"
+
+      if [ ! -f "${VIRTUALENVWRAPPER_SCRIPT}" ]; then
         (
           local VIRTUALENVWRAPPER_VERSION="==${VIRTUALENVWRAPPER_VERSION}"
 
@@ -24,28 +36,18 @@ lib() {
 
           pyenv exec pip install $QUIET $VERBOSE "virtualenvwrapper${VIRTUALENVWRAPPER_VERSION%==}" 1>&2
         )
-        VIRTUALENVWRAPPER_SCRIPT="$(pyenv which virtualenvwrapper.sh 2>/dev/null || true)"
-      fi
-      export VIRTUALENVWRAPPER_SCRIPT
-      export VIRTUALENVWRAPPER_LAZY_SCRIPT="$(pyenv which virtualenvwrapper_lazy.sh 2>/dev/null || true)"
-      if [ ! -x "${VIRTUALENVWRAPPER_SCRIPT}" ] || [ ! -x "${VIRTUALENVWRAPPER_LAZY_SCRIPT}" ]; then
-        echo "pyenv-virtualenvwrapper: ${version}: virtualenvwrapper is not available." 1>&2
-        STATUS=1
       fi
 
-      export VIRTUALENVWRAPPER_VIRTUALENV_CLONE="$(pyenv which virtualenv-clone 2>/dev/null || true)"
       if [ ! -x "${VIRTUALENVWRAPPER_VIRTUALENV_CLONE}" ]; then
         echo "pyenv-virtualenvwrapper: ${version}: virtualenv-clone is not available." 1>&2
         STATUS=1
       fi
 
-      export VIRTUALENVWRAPPER_VIRTUALENV="$(pyenv which virtualenv 2>/dev/null || true)"
       if [ ! -x "${VIRTUALENVWRAPPER_VIRTUALENV}" ]; then
         echo "pyenv-virtualenvwrapper: ${version}: virtualenv is not available." 1>&2
         STATUS=1
       fi
 
-      export VIRTUALENVWRAPPER_PYTHON="$(pyenv which python 2>/dev/null || true)"
       if [ ! -x "${VIRTUALENVWRAPPER_PYTHON}" ]; then
         echo "pyenv-virtualenvwrapper: ${version}: python is not available." 1>&2
         STATUS=1

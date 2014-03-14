@@ -17,6 +17,8 @@ EOS
 #!/usr/bin/env bash
 echo virtualenv-clone is invoked
 EOS
+
+    install -p "${BATS_TEST_DIRNAME}/virtualenvwrapper"/* "${PYENV_ROOT}/versions/${version}/bin/"
   done
 }
 
@@ -34,11 +36,7 @@ create_executable() {
 
 gen_script() {
   stub pyenv "version-name : echo \"${PYENV_VERSION}\""
-  stub pyenv "which virtualenvwrapper.sh : echo \"${BATS_TEST_DIRNAME}/libexec/virtualenvwrapper.sh\""
-  stub pyenv "which virtualenvwrapper_lazy.sh : echo \"${BATS_TEST_DIRNAME}/libexec/virtualenvwrapper_lazy.sh\""
-  stub pyenv "which virtualenv-clone : echo \"${PYENV_ROOT}/versions/${PYENV_VERSION}/bin/virtualenv-clone\""
-  stub pyenv "which virtualenv : echo \"${PYENV_ROOT}/versions/${PYENV_VERSION}/bin/virtualenv\""
-  stub pyenv "which python : echo \"${PYENV_ROOT}/versions/${PYENV_VERSION}/bin/python\""
+  stub pyenv "prefix ${PYENV_VERSION} : echo \"${PYENV_ROOT}/versions/${PYENV_VERSION}\""
 
   run pyenv-sh-virtualenvwrapper_lazy
 
@@ -84,11 +82,7 @@ EOS
   script="$(gen_script)"
 
   stub pyenv "version-name : echo \"3.3.3\""
-  stub pyenv "which virtualenvwrapper.sh : echo \"${BATS_TEST_DIRNAME}/libexec/virtualenvwrapper.sh\""
-  stub pyenv "which virtualenvwrapper_lazy.sh : echo \"${BATS_TEST_DIRNAME}/libexec/virtualenvwrapper_lazy.sh\""
-  stub pyenv "which virtualenv-clone : echo \"${PYENV_ROOT}/versions/3.3.3/bin/virtualenv-clone\""
-  stub pyenv "which virtualenv : echo \"${PYENV_ROOT}/versions/3.3.3/bin/virtualenv\""
-  stub pyenv "which python : echo \"${PYENV_ROOT}/versions/3.3.3/bin/python\""
+  stub pyenv "prefix 3.3.3 : echo \"${PYENV_ROOT}/versions/3.3.3\""
 
   run eval "${script}; virtualenvwrapper_load"
 

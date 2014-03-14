@@ -2,7 +2,6 @@ export TMP="$BATS_TEST_DIRNAME/tmp"
 
 PATH=/usr/bin:/usr/sbin:/bin/:/sbin
 PATH="$BATS_TEST_DIRNAME/../bin:$PATH"
-PATH="$BATS_TEST_DIRNAME/libexec:$PATH"
 PATH="$TMP/bin:$PATH"
 export PATH
 
