@@ -88,8 +88,11 @@ lib() {
     pyenv_virtualenvwrapper_load || return 1
     source "$VIRTUALENVWRAPPER_SCRIPT"
 
+    # FIXME: is there any better way to override existing shell functions in both bash and zsh?
     # preserve original virtualenvwrapper_verify_workon_home
-    eval "$(echo "pyenv_virtualenvwrapper_verify_workon_home() {";{ declare -f virtualenvwrapper_verify_workon_home 2>/dev/null || printf "f() {\ntrue;}\n";} | tail -n +2 | sed '/^{ *$/d')"
+    local vvwh="$(declare -f "virtualenvwrapper_verify_workon_home" 2>/dev/null || printf "f() {\ntrue;}\n")"
+    # removing lines starting with '{' as workaround for bash
+    eval "$(echo "pyenv_virtualenvwrapper_verify_workon_home() {"; echo "$vvwh" | tail -n +2 | sed '/^{ *$/d')"
     virtualenvwrapper_verify_workon_home() {
       pyenv_virtualenvwrapper_load || return 1
       pyenv_virtualenvwrapper_verify_workon_home "$@"
