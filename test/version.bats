@@ -4,7 +4,7 @@ load test_helper
 
 setup() {
   export PYENV_ROOT="${TMP}/pyenv"
-  export PYENV_VIRTUALENVWRAPPER_VERSION="20140122"
+  export PYENV_VIRTUALENVWRAPPER_VERSION="20140321"
 }
 
 @test "display virtualenvwrapper version" {

@@ -65,6 +65,11 @@ or, if you favor `virtualenvwrapper_lazy.sh`,
 
 ## Version History
 
+#### 20140321
+
+  * Performance improvement (approx 1.5x+ in common cases) (#13)
+  * Add Homebrew installation instructions. (#14)
+
 #### 20140122
 
   * Display errors when `pyenv virtualenvwrapper` is invoked as a command

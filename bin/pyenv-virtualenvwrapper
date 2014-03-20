@@ -6,7 +6,7 @@
 set -e
 [ -n "$PYENV_DEBUG" ] && set -x
 
-PYENV_VIRTUALENVWRAPPER_VERSION="20140122"
+PYENV_VIRTUALENVWRAPPER_VERSION="20140321"
 
 lib() {
   pyenv_virtualenvwrapper_load() {
