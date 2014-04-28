@@ -63,6 +63,21 @@ or, if you favor `virtualenvwrapper_lazy.sh`,
 
     $ pyenv virtualenvwrapper_lazy
 
+### Using `pyvenv` instead of `virtualenv`
+
+To get virtualenvwrapper to create a virtual environment
+using `pyvenv` instead of `virtualenv`, set the
+`PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV` environment variable.
+For example, set the following in your shell initialization config:
+
+    export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+
+After you start a new shell with that variable set and initialize via
+`pyenv virtualenvwrapper` or `pyenv virtualenvwrapper_lazy`, any
+virtual environments created from that shell using `mkvirtualenv` will
+be created using `pyvenv` if it is available in the active Python
+version (`pyvenv` is in Python 3.3 or later).
+
 ## Version History
 
 #### 20140321

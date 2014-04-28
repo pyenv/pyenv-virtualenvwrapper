@@ -49,7 +49,11 @@ lib() {
         }
       }
 
-      export VIRTUALENVWRAPPER_VIRTUALENV="${prefix}/bin/virtualenv"
+      if [ -n "${PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV}" -a -x "${prefix}/bin/pyvenv" ]; then
+        export VIRTUALENVWRAPPER_VIRTUALENV="${prefix}/bin/pyvenv"
+      else
+        export VIRTUALENVWRAPPER_VIRTUALENV="${prefix}/bin/virtualenv"
+      fi
       [ -x "${VIRTUALENVWRAPPER_VIRTUALENV}" ] || {
         export VIRTUALENVWRAPPER_VIRTUALENV="$(pyenv which virtualenv 2>/dev/null || true)"
         [ -x "${VIRTUALENVWRAPPER_VIRTUALENV}" ] || {
