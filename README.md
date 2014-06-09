@@ -80,6 +80,10 @@ version (`pyvenv` is in Python 3.3 or later).
 
 ## Version History
 
+#### 20140609
+
+  * Add support for creating venv using `pyvenv` if it is available (#16)
+
 #### 20140321
 
   * Performance improvement (approx 1.5x+ in common cases) (#13)
