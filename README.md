@@ -8,6 +8,8 @@ pyenv-virtualenvwrapper is a [pyenv](https://github.com/yyuu/pyenv) plugin
 which provides an `pyenv virtualenvwrapper` command to manage your virtualenvs
 with [virtualenvwrapper](http://pypi.python.org/pypi/virtualenvwrapper).
 
+**Attention:** This plugin is unlike [pyenv-virtualenv](https://github.com/yyuu/pyenv-virtualenv) which supplies extended commands like `pyenv virtualenv 3.1.4 project_name` to directly help out managing the virtualenvs, it helps setup the virtualenvwrapper to specific directories and afterwards what we gain is the original commands of both pyenv and virtualenvwrapper but no special and more convenient extented commands like ones from pyenv-virtualenv brings. That's to say, pyenv and virtualenvwrapper are still separated while pyenv-virtualenv is a nice combinition.
+
 ## Installation
 
 ### Installing python
