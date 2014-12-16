@@ -10,7 +10,11 @@ PYENV_VIRTUALENVWRAPPER_VERSION="20140609"
 
 lib() {
   pyenv_virtualenvwrapper_load() {
-    local version="$(pyenv version-name)"
+    local version="$(pyenv version-name 2>/dev/null || true)"
+    if [[ -z "$version" ]]; then
+      echo "pyenv-virtualenvwrapper: python is not available." 1>&2
+      return 1
+    fi
     if [[ "${PYENV_VIRTUALENVWRAPPER_PYENV_VERSION}" != "${version}" ]]; then
       unset PYENV_VIRTUALENVWRAPPER_PYENV_VERSION
 
