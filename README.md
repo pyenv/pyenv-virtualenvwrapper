@@ -16,7 +16,7 @@ pyenv-virtualenvwrapper helps in interacting with virtualenvwrapper, but
 pyenv-virtualenv provides more convenient commands, where virtualenvs are
 first-class pyenv versions, that can be (de)activated.
 That's to say, pyenv and virtualenvwrapper are still separated while
-pyenv-virtualenv is a nice combinition.
+pyenv-virtualenv is a nice combination.
 
 ## Installation
 
