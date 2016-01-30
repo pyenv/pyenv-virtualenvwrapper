@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+if [[ "$0" != "${BASH_SOURCE}" ]]; then
+  unset VIRTUAL_ENV
+  if [ -n "${CONDA_DEFAULT_ENV}" ]; then
+    unset CONDA_DEFAULT_ENV
+  fi
+  if [ -n "${_OLD_VIRTUAL_PATH}" ]; then
+    export PATH="${_OLD_VIRTUAL_PATH}"
+    unset _OLD_VIRTUAL_PATH
+  fi
+  if [ -n "${_OLD_VIRTUAL_PYTHONHOME}" ]; then
+    export PYTHONHOME="${_OLD_VIRTUAL_PYTHONHOME}"
+    unset _OLD_VIRTUAL_PYTHONHOME
+  fi
+  if [ -n "${_OLD_VIRTUAL_PS1}" ]; then
+    export PS1="${_OLD_VIRTUAL_PS1}"
+    unset _OLD_VIRTUAL_PS1
+  fi
+  if declare -f deactivate 1>/dev/null 2>&1; then
+    unset -f deactivate
+  fi
+else
+  # not invoked as `source deactivate`
+  # what should i do here...?
+  :
+fi
