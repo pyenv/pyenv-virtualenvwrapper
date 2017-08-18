@@ -38,10 +38,10 @@ which is bound to virtualenvwrapper.)
 Installing pyenv-virtualenvwrapper as a pyenv plugin will give you access to the
 `pyenv virtualenvwrapper` and `pyenv virtualenvwrapper_lazy` command.
 
-    $ git clone https://github.com/yyuu/pyenv-virtualenvwrapper.git ~/.pyenv/plugins/pyenv-virtualenvwrapper
+    $ git clone https://github.com/yyuu/pyenv-virtualenvwrapper.git $(pyenv root)/plugins/pyenv-virtualenvwrapper
 
 This will install the latest development version of pyenv-virtualenvwrapper into
-the `~/.pyenv/plugins/pyenv-virtualenvwrapper` directory. From that directory, you
+the `$(pyenv root)/plugins/pyenv-virtualenvwrapper` directory. From that directory, you
 can check out a specific release tag. To update pyenv-virtualenvwrapper, run `git
 pull` to download the latest changes.
 
