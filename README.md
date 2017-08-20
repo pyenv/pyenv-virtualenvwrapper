@@ -1,15 +1,15 @@
 # pyenv-virtualenvwrapper
 
-[![Build Status](https://travis-ci.org/yyuu/pyenv-virtualenvwrapper.png)](https://travis-ci.org/yyuu/pyenv-virtualenvwrapper)
+[![Build Status](https://travis-ci.org/pyenv/pyenv-virtualenvwrapper.png)](https://travis-ci.org/pyenv/pyenv-virtualenvwrapper)
 
-An [alternative approach](https://github.com/yyuu/pyenv-virtualenv) to manage virtualenvs from pyenv.
+An [alternative approach](https://github.com/pyenv/pyenv-virtualenv) to manage virtualenvs from pyenv.
 
-pyenv-virtualenvwrapper is a [pyenv](https://github.com/yyuu/pyenv) plugin
+pyenv-virtualenvwrapper is a [pyenv](https://github.com/pyenv/pyenv) plugin
 which provides a `pyenv virtualenvwrapper` command to manage your virtualenvs
 with [virtualenvwrapper](http://pypi.python.org/pypi/virtualenvwrapper).
 
 **Attention:** This plugin is different from
-[pyenv-virtualenv](https://github.com/yyuu/pyenv-virtualenv), which provides
+[pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv), which provides
 extended commands like `pyenv virtualenv 3.4.1 project_name` to directly help
 out with managing virtualenvs.
 pyenv-virtualenvwrapper helps in interacting with virtualenvwrapper, but
@@ -38,7 +38,7 @@ which is bound to virtualenvwrapper.)
 Installing pyenv-virtualenvwrapper as a pyenv plugin will give you access to the
 `pyenv virtualenvwrapper` and `pyenv virtualenvwrapper_lazy` command.
 
-    $ git clone https://github.com/yyuu/pyenv-virtualenvwrapper.git $(pyenv root)/plugins/pyenv-virtualenvwrapper
+    $ git clone https://github.com/pyenv/pyenv-virtualenvwrapper.git $(pyenv root)/plugins/pyenv-virtualenvwrapper
 
 This will install the latest development version of pyenv-virtualenvwrapper into
 the `$(pyenv root)/plugins/pyenv-virtualenvwrapper` directory. From that directory, you
